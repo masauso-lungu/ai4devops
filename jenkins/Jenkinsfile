@@ -20,8 +20,11 @@ pipeline {
         stage('Build/Test') {
             steps {
                 echo "Running pytest..."
-                        sh '''
-                            set -e
+                        sh '''#!/bin/bash -l
+    set -euo pipefail
+
+                        # run tests from the repo root (venv placed at repo root)
+                        if [ -d "../tests" ]; then
                             python3 -m venv venv
                             . venv/bin/activate
                             pip install --upgrade pip
