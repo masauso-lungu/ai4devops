@@ -1,12 +1,54 @@
-stage('Build/Test') {
-    steps {
-        echo "Running pytest..."
-        sh """
-        python3 -m venv venv
-        . venv/bin/activate
-        pip install --upgrade pip
-        pip install -r requirements.txt
-        pytest --maxfail=1 --disable-warnings -q
-        """
+pipeline {
+    agent any
+
+    options {
+        // prevent concurrent builds
+            disableConcurrentBuilds()
+            // prevent pipeline from resuming after controller restart
+            disableResume()
+        // keep last 10 builds
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build/Test') {
+            steps {
+                echo "Running pytest..."
+                        sh '''
+                            set -e
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            pip install --upgrade pip
+                            pip install -r requirements.txt
+                            mkdir -p reports
+                            # ensure the repository root is on PYTHONPATH so tests can import local packages
+                            export PYTHONPATH="$(pwd)"
+                            pytest --maxfail=1 --disable-warnings -q --junitxml=reports/results.xml
+                        '''
+            }
+        }
+
+        stage('Mock JIRA Update') {
+            steps {
+                echo "Mock: would update JIRA (demo)"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Archive test results (if any) and cleanup workspace'
+            archiveArtifacts artifacts: 'reports/**', allowEmptyArchive: true
+            cleanWs()
+        }
+        failure {
+            echo 'Build failed'
+        }
     }
 }
