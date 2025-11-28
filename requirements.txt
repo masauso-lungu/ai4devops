@@ -1,1 +1,6 @@
+langchain
+langgraph
+pydantic
+requests
 pytest
+python-dotenv
