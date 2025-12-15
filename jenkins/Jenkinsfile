@@ -1,45 +1,48 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11-slim'
+            args '--user root'
+        }
+    }
 
     options {
-        // keep logs minimal
         buildDiscarder(logRotator(daysToKeepStr: '10', numToKeepStr: '10'))
-        // timeout long-running jobs
-        timeout(time: 12, unit: 'HOURS')
-        // timestamps in console
+        timeout(time: 1, unit: 'HOURS')
         timestamps()
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                // checkout the repository from the job's SCM
                 checkout scm
+                echo "Repository checked out successfully"
             }
         }
 
         stage('Build & Test Hello') {
             steps {
-                echo 'Running hello script and basic tests...'
-                sh '''#!/bin/bash -l
-set -euo pipefail
+                sh '''
+                set -e
 
-# ensure repo root is importable
-export PYTHONPATH="$(pwd)"
+                python --version
 
-# run the hello function
-python3 - <<'PY'
+                # install pytest
+                pip install --no-cache-dir pytest
+
+                # ensure repo root is importable
+                export PYTHONPATH="$(pwd)"
+
+                echo "Running hello() demo"
+                python - <<'PY'
 from agents.hello import hello
 print(hello())
 PY
 
-# run pytest for only the hello test if pytest is available
-if command -v pytest >/dev/null 2>&1; then
-  pytest -q tests/test_hello.py || true
-else
-  echo "pytest not available; skipping pytest run"
-fi
-'''
+                echo "Running pytest"
+                pytest -q tests/test_hello.py
+                '''
             }
         }
     }
@@ -50,4 +53,3 @@ fi
         }
     }
 }
-
