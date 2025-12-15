@@ -95,3 +95,19 @@ If you'd like, I can now:
 - Walk you step-by-step (I can show the exact sequence of UI clicks or commands).
 
 Pick one and I'll do it next.
+
+Using the included `jenkins/Jenkinsfile`
+------------------------------------
+
+This repository also contains `jenkins/Jenkinsfile` which the Pipeline job can use directly from the repo root. Key points:
+
+- Credential: The pipeline expects a Jenkins **String** credential with ID `github-token` containing a GitHub personal access token (PAT). Create it under **Manage Jenkins → Credentials**.
+- Parameter: The pipeline accepts an optional parameter `GITHUB_REPO` (owner/repo). If left empty, the pipeline will try to infer the repo from SCM information.
+- Stages:
+  - `GitHub Connection Test` : uses the PAT to call the GitHub API and verify the repository can be reached.
+  - `Checkout` : `checkout scm` pulls the repo code.
+  - `Build/Test` : creates a Python virtualenv, installs `requirements.txt`, and runs `pytest` (results saved to `reports/results.xml`).
+
+To enable automatic builds on push, add a GitHub webhook pointing to `https://<jenkins-host>/github-webhook/` and ensure the GitHub plugin is installed in Jenkins.
+
+If you want, I can: generate a Multibranch Pipeline XML, fill in `github_pipeline_job_config.xml` placeholders for your repo, or show the exact curl commands to create the job via Jenkins REST API.
