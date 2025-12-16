@@ -1,5 +1,5 @@
 def hello():
-    return "Hello, AI4DevOps, the future is AI!"
+    return "Hello, AI4DevOps, the future is AI.. The future is now!"
 
 if __name__ == "__main__":
     print(hello())
