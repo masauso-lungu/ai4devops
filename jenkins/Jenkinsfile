@@ -32,8 +32,15 @@ pipeline {
                 echo "Upgrading pip"
                 pip install --upgrade pip
 
-                echo "Installing test dependencies"
-                pip install pytest
+                # ---------------Install dependencies---------------
+                if [ -f requirements.txt ]; then
+                    echo "Installing dependencies from requirements.txt"
+                    pip install -r requirements.txt
+                else
+                    echo "Error: requirements.txt not found!"
+                    exit 1 # Stop the build if dependencies cannot be installed
+                fi
+                # ----------------------------------------------------
 
                 echo "Running hello() demo"
                 export PYTHONPATH="$(pwd)"
@@ -53,6 +60,10 @@ PY
         always {
             echo "Pipeline finished."
             sh 'rm -rf .venv || true'
+        }
+    }
+}
+e finished.'
         }
     }
 }
