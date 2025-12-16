@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'
-            args '--user root'
-        }
-    }
+    agent any
 
     options {
         buildDiscarder(logRotator(daysToKeepStr: '10', numToKeepStr: '10'))
@@ -26,10 +21,12 @@ pipeline {
                 sh '''
                 set -e
 
-                python --version
+                echo "Python version:"
+                python3 --version
+                pip3 --version
 
                 # install pytest
-                pip install --no-cache-dir pytest
+                pip3 install --user pytest
 
                 # ensure repo root is importable
                 export PYTHONPATH="$(pwd)"
@@ -41,7 +38,7 @@ print(hello())
 PY
 
                 echo "Running pytest"
-                pytest -q tests/test_hello.py
+                python3 -m pytest tests/test_hello.py -q
                 '''
             }
         }
