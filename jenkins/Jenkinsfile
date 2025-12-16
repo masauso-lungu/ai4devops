@@ -26,7 +26,7 @@ pipeline {
                 pip3 --version
 
                 # install pytest
-                pip3 install --user pytest
+                pip3 install pytest
 
                 # ensure repo root is importable
                 export PYTHONPATH="$(pwd)"
