@@ -23,22 +23,27 @@ pipeline {
 
                 echo "Python version:"
                 python3 --version
-                pip3 --version
 
-                # install pytest
-                pip3 install pytest
+                echo "Creating virtual environment"
+                python3 -m venv .venv
 
-                # ensure repo root is importable
-                export PYTHONPATH="$(pwd)"
+                . .venv/bin/activate
+
+                echo "Upgrading pip"
+                pip install --upgrade pip
+
+                echo "Installing test dependencies"
+                pip install pytest
 
                 echo "Running hello() demo"
-                python - <<'PY'
+                export PYTHONPATH="$(pwd)"
+                python3 - <<'PY'
 from agents.hello import hello
 print(hello())
 PY
 
                 echo "Running pytest"
-                python3 -m pytest tests/test_hello.py -q
+                pytest -q tests/test_hello.py
                 '''
             }
         }
@@ -46,7 +51,8 @@ PY
 
     post {
         always {
-            echo 'Pipeline finished.'
+            echo "Pipeline finished."
+            sh 'rm -rf .venv || true'
         }
     }
 }
