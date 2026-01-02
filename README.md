@@ -23,20 +23,28 @@ Agents will handle tasks like managing JIRA tickets, creating/testing code in Gi
 ## Repo Structure
 ```
 ai4devops/
-├── agents/ # AI agent scripts
-│ ├── issue_agent.py # Reads JIRA tickets and suggests tasks
-│ ├── code_agent.py # Generates/modifies GitHub code
-│ └── deploy_agent.py # Triggers Jenkins builds and deployments
-├── jenkins/ # Jenkins configuration
-│ ├── Jenkinsfile # Main pipeline file
-│ └── pipeline_lib/ # Optional helper scripts for Jenkins
-├── docs/ # Documentation and diagrams
-│ ├── architecture.md # Architecture diagrams of pipeline and agents
-│ ├── setup.md # Step-by-step setup instructions
-│ └── sprint_notes/ # Notes and deliverables per sprint
-├── tests/ # Sample tests for pipeline or agents
-│ ├── test_agent.py # Unit tests for agent scripts
-│ └── test_pipeline.sh # Shell scripts for Jenkins test runs
-├── README.md # Project overview and instructions
-└── requirements.txt # Python dependencies for agents
+├── agents/             # AI agent scripts
+│   ├── issue_agent.py  # Reads JIRA tickets and suggests tasks
+│   ├── code_agent.py   # Generates/modifies GitHub code
+│   ├── deploy_agent.py # Triggers Jenkins builds and deployments
+│   ├── graphy.py       # LangGraph orchestration logic
+│   ├── state.py        # Agent state definitions
+│   └── jira_utils.py   # JIRA API utility functions
+├── pipeline/           # Pipeline configuration
+│   ├── Jenkinsfile     # Main pipeline file
+│   └── pipeline_lib/   # Optional helper scripts for Jenkins
+├── docs/               # Documentation and diagrams
+│   ├── architecture.md # Architecture diagrams of pipeline and agents
+│   ├── setup.md        # Step-by-step setup instructions
+│   └── sprint_notes/   # Notes and deliverables per sprint
+├── tests/              # Sample tests for pipeline or agents
+│   ├── test_agent.py   # Unit tests for agent scripts
+│   └── test_pipeline.sh# Shell scripts for Jenkins test runs
+├── research/           # Research & learning materials
+│   └── jira_test.py    # JIRA integration test script
+├── README.md           # Project overview and instructions
+├── LICENSE             # License file
+├── requirements.txt    # Python dependencies for agents
+├── .env                # Environment variables for agents (Not committed)
+└── .gitignore          # Git ignore file
 ```
