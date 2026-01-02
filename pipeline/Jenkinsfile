@@ -45,7 +45,7 @@ pipeline {
                 echo "Running hello() demo"
                 export PYTHONPATH="$(pwd)"
                 python3 - <<'PY'
-from agents.hello import hello
+from research.hello import hello
 print(hello())
 PY
 
